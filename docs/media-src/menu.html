@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="base.css" />
+    <style>
+      :root {
+        --w: 1440px;
+        --h: 600px;
+      }
+      .menu {
+        position: absolute;
+        top: 52px;
+        right: 64px;
+        width: 248px;
+        background: var(--surface1);
+        border: 1px solid var(--border-accent);
+        border-radius: 10px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.3);
+        padding: 6px;
+      }
+      .item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 38px;
+        padding: 0 10px;
+        border-radius: 7px;
+        font-size: 14px;
+        color: var(--fg);
+      }
+      .item.hover {
+        background: var(--surface2);
+      }
+      .item img,
+      .item svg.icon {
+        width: 18px;
+        height: 18px;
+        flex: none;
+      }
+      .item svg.icon {
+        color: var(--muted);
+      }
+      .item.muted {
+        color: var(--muted);
+      }
+      .sep {
+        height: 1px;
+        background: var(--border-accent);
+        margin: 6px 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window">
+      <aside class="sidebar">
+        <div class="project">checkout-web</div>
+        <div class="ws active"><i class="dot live"></i>Fix the OAuth redirect loop</div>
+        <div class="ws"><i class="dot"></i>Page and rate-limit the export API</div>
+        <div class="ws"><i class="dot"></i>Move CI to GitHub Actions</div>
+        <div class="project">design-system</div>
+        <div class="ws"><i class="dot"></i>Button variants and theme tokens</div>
+        <div class="ws"><i class="dot"></i>Dark mode contrast pass</div>
+        <div class="footer">
+          <div class="ws">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>
+            Settings
+          </div>
+        </div>
+      </aside>
+      <section class="main">
+        <div class="header">
+          <span class="title">Fix the OAuth redirect loop</span>
+          <span class="branch">fix/oauth-callback</span>
+          <span class="spacer"></span>
+          <span class="hbtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 21V9a9 9 0 0 0 9 9" /></svg></span>
+          <span class="hbtn"><svg class="icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5" /><line x1="12" x2="20" y1="19" y2="19" /></svg></span>
+          <span class="hbtn on"><svg class="icon" viewBox="0 0 24 24"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" /><path d="m21 3-9 9" /><path d="M15 3h6v6" /></svg></span>
+          <span class="hbtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" /></svg></span>
+        </div>
+        <div class="tabs">
+          <div class="tab active">Claude · Login keeps redirecting to /login</div>
+          <div class="tab">Codex · Callback tests</div>
+          <div class="tab">Terminal</div>
+        </div>
+        <div class="chat" style="padding-right: 340px">
+          <div class="msg user">After a successful login the user lands on /login again. The state check in the OAuth callback looks wrong. Please take a look.</div>
+          <div class="msg">I checked <code>auth/callback.ts</code>. The state is kept in sessionStorage, but the callback page opens on a new domain, so it cannot read the value. The check fails and the login starts again…</div>
+          <div class="msg user">Keep the state in a signed cookie instead, and add tests.</div>
+          <div class="msg">Done. The state is now in a signed HttpOnly cookie. I added 3 callback tests, and they all pass.</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="menu">
+      <div class="item"><img src="icons/fork.png" />Fork</div>
+      <div class="item"><svg class="icon" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>GitHub Desktop</div>
+      <div class="item hover"><img src="icons/vscode.png" />VS Code</div>
+      <div class="item"><svg class="icon" viewBox="0 0 24 24"><path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" /></svg>Cursor</div>
+      <div class="item"><svg class="icon" viewBox="0 0 24 24"><path d="m7 11 2-2-2-2" /><path d="M11 13h4" /><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /></svg>Terminal</div>
+      <div class="item"><img src="icons/explorer.png" />File Manager</div>
+      <div class="sep"></div>
+      <div class="item muted"><svg class="icon" viewBox="0 0 24 24"><path d="M20 7h-9" /><path d="M14 17H5" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg>Edit apps…</div>
+    </div>
+  </body>
+</html>

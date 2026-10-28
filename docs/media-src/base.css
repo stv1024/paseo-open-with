@@ -1,0 +1,177 @@
+/* Paseo "green" dark theme tokens, mirrored from the app so mockups match the real UI. */
+:root {
+  --surface0: #181b1a;
+  --surface1: #1e2120;
+  --surface2: #272a29;
+  --surface3: #434645;
+  --sidebar: #141716;
+  --fg: #e6e8e7;
+  --muted: #a1a5a4;
+  --extra-muted: #717574;
+  --border: #252b2a;
+  --border-accent: #2f3534;
+  --accent: #20744a;
+  --accent-bright: #7ccba0;
+  --font: "Segoe UI", "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
+  --mono: "Cascadia Code", Consolas, monospace;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  width: var(--w);
+  height: var(--h);
+  overflow: hidden;
+}
+body {
+  font-family: var(--font);
+  color: var(--fg);
+  background: var(--surface0);
+  -webkit-font-smoothing: antialiased;
+}
+svg.icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+
+/* App chrome */
+.window {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.sidebar {
+  width: 260px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sidebar .project {
+  color: var(--extra-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 14px 10px 6px;
+}
+.ws {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ws.active {
+  background: var(--surface2);
+  color: var(--fg);
+}
+.ws .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--surface3);
+  flex: none;
+}
+.ws .dot.live {
+  background: var(--accent-bright);
+}
+.sidebar .footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.header {
+  height: 52px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+}
+.header .title {
+  font-weight: 600;
+  font-size: 15px;
+}
+.header .branch {
+  color: var(--extra-muted);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.header .spacer {
+  flex: 1;
+}
+.hbtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+.hbtn.on {
+  background: var(--surface2);
+  color: var(--accent-bright);
+  box-shadow: 0 0 0 1px var(--border-accent);
+}
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+}
+.tab {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tab.active {
+  color: var(--fg);
+  border-color: var(--accent-bright);
+}
+.chat {
+  padding: 26px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0.5;
+}
+.msg {
+  max-width: 560px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.msg.user {
+  align-self: flex-end;
+  background: var(--surface2);
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: var(--fg);
+}
+

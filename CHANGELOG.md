@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Add screenshots of the menu and the settings to the plugin page.
+
 ## 0.1.0
 
 - A button in the workspace header opens the workspace folder in another app.

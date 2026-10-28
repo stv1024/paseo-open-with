@@ -7,6 +7,8 @@ Paseo's own "Open in" button has a fixed list of editors, and you cannot add an
 app such as Fork. Open With has a menu that you can change: add any program, turn
 apps off, and put them in your order.
 
+![The Open With menu in the workspace header](docs/images/menu.png)
+
 ## Install
 
 Requires **Paseo 0.13.2 or later**.
@@ -55,6 +57,8 @@ returns it to the defaults.
 
 Settings are saved per daemon, so each computer keeps its own list.
 
+![The Open With settings, with a custom app open for editing](docs/images/settings.png)
+
 ## How it works
 
 The daemon finds the apps, reads their icons (Windows only), and starts the app
@@ -69,6 +73,9 @@ npm run typecheck
 npm test
 paseo plugin install .
 ```
+
+The screenshots in `docs/images` are rendered from the HTML mockups in
+`docs/media-src` with a local Chrome or Edge: `node docs/media-src/render.mjs`.
 
 ### Release
 

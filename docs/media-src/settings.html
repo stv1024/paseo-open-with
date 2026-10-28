@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="base.css" />
+    <style>
+      :root {
+        --w: 1440px;
+        --h: 900px;
+      }
+      .content {
+        padding: 28px 36px;
+        width: 760px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .section {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        margin: 4px 4px -6px;
+      }
+      .card {
+        background: var(--surface1);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .app {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        border-top: 1px solid var(--border);
+      }
+      .card > :first-child {
+        border-top: none;
+      }
+      .app img,
+      .app > svg.icon {
+        width: 20px;
+        height: 20px;
+      }
+      .app .text {
+        flex: 1;
+        min-width: 0;
+      }
+      .app .name {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .app .cmd {
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .app .cmd.missing {
+        color: var(--extra-muted);
+      }
+      .chev {
+        padding: 6px;
+        color: var(--muted);
+        display: grid;
+      }
+      .chev.off {
+        opacity: 0.3;
+      }
+      .switch {
+        width: 38px;
+        height: 22px;
+        border-radius: 99px;
+        background: var(--surface3);
+        position: relative;
+        margin-left: 6px;
+        flex: none;
+      }
+      .switch::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #d9dcdb;
+      }
+      .switch.on {
+        background: var(--accent);
+      }
+      .switch.on::after {
+        left: 19px;
+        background: #fff;
+      }
+      .fields {
+        background: var(--surface0);
+        border-top: 1px solid var(--border);
+      }
+      .field {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        padding: 10px 16px;
+        border-top: 1px solid var(--border);
+      }
+      .fields > :first-child {
+        border-top: none;
+      }
+      .field .label {
+        width: 170px;
+        font-size: 14px;
+        flex: none;
+      }
+      .field .hint {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 17px;
+        margin-top: 3px;
+      }
+      .field .input {
+        flex: 1;
+        border: 1px solid var(--border);
+        background: var(--surface1);
+        border-radius: 7px;
+        padding: 7px 10px;
+        font-size: 13px;
+        font-family: var(--mono);
+      }
+      .field .input.focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(32, 116, 74, 0.28);
+      }
+      .action {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .btn {
+        padding: 6px 14px;
+        border-radius: 7px;
+        border: 1px solid var(--border-accent);
+        background: var(--surface2);
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--fg);
+      }
+      .btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .nav .ws svg.icon {
+        width: 16px;
+        height: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window">
+      <aside class="sidebar nav">
+        <div class="project">Settings</div>
+        <div class="ws">General</div>
+        <div class="ws">Appearance</div>
+        <div class="ws">Providers</div>
+        <div class="ws">Hosts</div>
+        <div class="project">Plugins</div>
+        <div class="ws">Auto-Pin</div>
+        <div class="ws">File Links</div>
+        <div class="ws active">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" /><path d="m21 3-9 9" /><path d="M15 3h6v6" /></svg>
+          Open With
+        </div>
+        <div class="ws">Tab Namer</div>
+      </aside>
+      <section class="main">
+        <div class="content">
+          <div class="h1">Open With</div>
+          <div class="section">Apps</div>
+          <div class="card">
+            <div class="app">
+              <img src="icons/fork.png" />
+              <div class="text"><div class="name">Fork</div><div class="cmd">C:\Users\me\AppData\Local\Fork\current\Fork.exe</div></div>
+              <span class="chev off"><svg class="icon" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg></span>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></span>
+              <span class="switch on"></span>
+            </div>
+            <div class="app">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
+              <div class="text"><div class="name">GitHub Desktop</div><div class="cmd missing">Not found</div></div>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg></span>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></span>
+              <span class="switch"></span>
+            </div>
+            <div class="app">
+              <img src="icons/vscode.png" />
+              <div class="text"><div class="name">VS Code</div><div class="cmd">C:\Users\me\AppData\Local\Programs\Microsoft VS Code\Code.exe</div></div>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg></span>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></span>
+              <span class="switch on"></span>
+            </div>
+            <div class="app">
+              <svg class="icon" viewBox="0 0 24 24"><path d="m7 11 2-2-2-2" /><path d="M11 13h4" /><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /></svg>
+              <div class="text"><div class="name">Terminal</div><div class="cmd">C:\Users\me\AppData\Local\Microsoft\WindowsApps\wt.exe</div></div>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg></span>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></span>
+              <span class="switch on"></span>
+            </div>
+            <div class="app">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M10 4v4" /><path d="M2 8h20" /><path d="M6 4v4" /></svg>
+              <div class="text"><div class="name">Sublime Merge</div><div class="cmd">C:\Program Files\Sublime Merge\sublime_merge.exe</div></div>
+              <span class="chev"><svg class="icon" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg></span>
+              <span class="chev off"><svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></span>
+              <span class="switch on"></span>
+            </div>
+            <div class="fields">
+              <div class="field"><div class="label">Name</div><div class="input">Sublime Merge</div></div>
+              <div class="field"><div class="label">Program</div><div class="input">C:\Program Files\Sublime Merge\sublime_merge.exe</div></div>
+              <div class="field">
+                <div class="label">Arguments<div class="hint">{path} is the workspace folder. Use double quotes around values with spaces.</div></div>
+                <div class="input focus">"{path}"</div>
+              </div>
+              <div class="field">
+                <div class="label">Icon<div class="hint">A Lucide icon name. The program icon is used when Paseo can read it.</div></div>
+                <div class="input">AppWindow</div>
+              </div>
+              <div class="action"><span class="btn">Remove</span></div>
+            </div>
+            <div class="action"><span class="btn">Add app</span></div>
+          </div>
+          <div class="card">
+            <div class="action"><span class="btn primary">Save</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
