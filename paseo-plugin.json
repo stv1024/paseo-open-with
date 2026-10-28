@@ -1,0 +1,13 @@
+{
+  "id": "open-with",
+  "name": "Open With",
+  "description": "Open the workspace folder in Fork, GitHub Desktop, VS Code, Cursor, a terminal, or any app you add, in two clicks from the header.",
+  "icon": "assets/icon.png",
+  "media": [],
+  "translations": {
+    "zh-CN": { "description": "在顶栏两次点击，用 Fork、GitHub Desktop、VS Code、Cursor、终端或你添加的任何程序打开 workspace 目录。" }
+  },
+  "requirements": {
+    "paseo": ">=0.13.2"
+  }
+}
