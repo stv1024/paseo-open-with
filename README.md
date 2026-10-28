@@ -70,6 +70,22 @@ npm test
 paseo plugin install .
 ```
 
+### Release
+
+Releases go to npm as `paseo-open-with` through
+[`.github/workflows/release.yml`](.github/workflows/release.yml), with npm Trusted
+Publishing (no npm token). Bump `version` in `package.json`, add a `CHANGELOG.md`
+section, then commit, tag and push:
+
+```bash
+npm run typecheck && npm test && npm run pack:npm   # check the packed file list
+git push origin main
+git tag -a v0.1.0 -m "Open With 0.1.0" && git push origin v0.1.0
+```
+
+The tag push publishes the tarball. Then create the GitHub release from the tag.
+The official registry opens a bump PR for each new npm version.
+
 ## License
 
 MIT
