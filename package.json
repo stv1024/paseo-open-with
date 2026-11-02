@@ -1,7 +1,7 @@
 {
   "name": "paseo-open-with",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "files": [
     "assets/",
     "paseo-plugin.json",
@@ -14,8 +14,7 @@
     "client/",
     "server/",
     "shared/",
-    "docs/images/menu.png",
-    "docs/images/settings.png",
+    "docs/images/*.png",
     "LICENSE",
     "!**/*.test.ts"
   ],
@@ -35,7 +34,7 @@
     "typescript": "^5.9.3",
     "zod": "^4.4.3"
   },
-  "description": "Paseo plugin: a header menu that opens the workspace folder in Fork, GitHub Desktop, VS Code, Cursor, a terminal, or any app you add.",
+  "description": "Paseo plugin: open the workspace folder, or a file link in an agent reply, in Fork, GitHub Desktop, VS Code, Cursor, a terminal, or any app you add. Right-click a file link or image to show it in its folder or copy its path.",
   "author": "stv1024",
   "homepage": "https://github.com/stv1024/paseo-open-with#readme",
   "repository": {
@@ -51,7 +50,10 @@
     "paseo-plugin",
     "open-with",
     "fork",
-    "editor"
+    "editor",
+    "file",
+    "links",
+    "context-menu"
   ],
   "publishConfig": {
     "access": "public",

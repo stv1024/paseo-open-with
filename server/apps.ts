@@ -30,6 +30,8 @@ interface Preset {
   commands(runtime: Runtime): string[];
   /** Where to read the program icon when the command is a script. */
   iconFrom?(runtime: Runtime): string[];
+  /** What the app opens for a file: its folder, or the git repository that holds it. */
+  target?: "folder" | "repo";
 }
 
 const home = (runtime: Runtime) => runtime.env.HOME ?? runtime.env.USERPROFILE ?? "";
@@ -57,6 +59,7 @@ export const PRESETS: Record<PresetId, Preset> = {
         : r.platform === "darwin"
           ? [...macApp(r, "Fork", "Contents/Resources/fork_cli"), "fork"]
           : [],
+    target: "repo",
   },
   "github-desktop": {
     name: "GitHub Desktop",
@@ -68,6 +71,7 @@ export const PRESETS: Record<PresetId, Preset> = {
           ? [...macApp(r, "GitHub Desktop", "Contents/Resources/app/static/github.sh"), "github"]
           : ["github-desktop"],
     iconFrom: (r) => (r.platform === "win32" ? winCandidates(r, ["GitHubDesktop\\GitHubDesktop.exe"], []) : []),
+    target: "repo",
   },
   vscode: {
     name: "VS Code",
@@ -104,6 +108,7 @@ export const PRESETS: Record<PresetId, Preset> = {
         : r.platform === "darwin"
           ? ["/usr/bin/open"]
           : ["x-terminal-emulator", "gnome-terminal", "konsole"],
+    target: "folder",
   },
   "file-manager": {
     name: "File Manager",
@@ -183,6 +188,19 @@ export function describeEntry(entry: Entry, runtime: Runtime): App {
     args: entry.args || defaults.args,
     defaults,
   };
+}
+
+/** The path an app gets for a file or folder. Git clients get the repository, terminals the folder. */
+export function targetPath(app: App, path: string, isDirectory: boolean, runtime: Runtime): string {
+  const kind = app.preset ? PRESETS[app.preset as PresetId].target : undefined;
+  if (!kind) return path;
+  const api = runtime.platform === "win32" ? win32 : posix;
+  const folder = isDirectory ? path : api.dirname(path);
+  if (kind === "folder") return folder;
+  for (let dir = folder; ; dir = api.dirname(dir)) {
+    if (runtime.exists(api.join(dir, ".git"))) return dir;
+    if (api.dirname(dir) === dir) return folder;
+  }
 }
 
 export interface Command {

@@ -1,13 +1,14 @@
 import { stat } from "node:fs/promises";
+import { dirname } from "node:path";
 import type { RpcInput, RpcOutput } from "@getpaseo/plugin";
 import type { PluginHandlerContext, PluginSettings } from "@getpaseo/plugin/server";
 import { appsRpc, launchRpc, mergeEntries, settingsSchema, type App } from "../shared/open-with";
-import { buildCommand, describeEntry, launch, nodeRuntime, PRESETS, resolveCommand } from "./apps";
+import { buildCommand, describeEntry, launch, nodeRuntime, PRESETS, resolveCommand, targetPath } from "./apps";
 import { readIcons } from "./icons";
 import type { PresetId } from "../shared/open-with";
 
 type Paseo = PluginHandlerContext["paseo"];
-type Settings = PluginSettings<typeof settingsSchema>;
+export type Settings = PluginSettings<typeof settingsSchema>;
 
 async function storedEntries(settings: Settings) {
   const state = await settings.read();
@@ -41,24 +42,40 @@ async function workspaceFolder(paseo: Paseo, workspaceId: string): Promise<strin
   return workspace?.workspaceDirectory ?? ref.directory ?? null;
 }
 
+export type OpenResult =
+  | { ok: true }
+  | { ok: false; reason: "unknown-app" | "not-installed" | "failed"; message?: string };
+
+/** Opens a file or folder in one app from the list. */
+export async function openInApp(
+  appId: string,
+  path: string,
+  isDirectory: boolean,
+  settings: Settings,
+): Promise<OpenResult> {
+  const entry = (await storedEntries(settings)).find((e) => e.id === appId);
+  if (!entry) return { ok: false, reason: "unknown-app" };
+  const app = describeEntry(entry, nodeRuntime);
+  if (!app.command) return { ok: false, reason: "not-installed" };
+
+  const target = targetPath(app, path, isDirectory, nodeRuntime);
+  const cwd = target === path && !isDirectory ? dirname(path) : target;
+  try {
+    await launch(buildCommand(app, target, nodeRuntime), cwd);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, reason: "failed", message: error instanceof Error ? error.message : String(error) };
+  }
+}
+
 export async function launchApp(
   input: RpcInput<typeof launchRpc>,
   settings: Settings,
   paseo: Paseo,
 ): Promise<RpcOutput<typeof launchRpc>> {
-  const entry = (await storedEntries(settings)).find((e) => e.id === input.appId);
-  if (!entry) return { ok: false, reason: "unknown-app" };
-  const app = describeEntry(entry, nodeRuntime);
-  if (!app.command) return { ok: false, reason: "not-installed" };
-
   const folder = await workspaceFolder(paseo, input.workspaceId).catch(() => null);
   if (!folder || !(await stat(folder).then((s) => s.isDirectory(), () => false))) {
     return { ok: false, reason: "no-folder" };
   }
-  try {
-    await launch(buildCommand(app, folder, nodeRuntime), folder);
-    return { ok: true };
-  } catch (error) {
-    return { ok: false, reason: "failed", message: error instanceof Error ? error.message : String(error) };
-  }
+  return openInApp(input.appId, folder, true, settings);
 }

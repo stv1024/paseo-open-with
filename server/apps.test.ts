@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { mergeEntries, presetEntry, PRESET_IDS, splitArgs, type Entry } from "../shared/open-with";
-import { buildCommand, describeEntry, expandEnv, resolveCommand, type Runtime } from "./apps";
+import { buildCommand, describeEntry, expandEnv, resolveCommand, targetPath, type Runtime } from "./apps";
 
 function windows(files: string[], env: Record<string, string> = {}): Runtime {
   const set = new Set(files.map((f) => f.toLowerCase()));
@@ -106,4 +106,15 @@ test("buildCommand quotes batch files for cmd.exe", () => {
 test("buildCommand rejects an app that is not installed", () => {
   const r = windows([]);
   assert.throws(() => buildCommand(describeEntry(presetEntry("cursor"), r), "D:\\x", r));
+});
+
+test("targetPath gives git clients the repository and terminals the folder", () => {
+  const r = windows(["D:\\repo\\.git"]);
+  const app = (preset: Entry["preset"]) => describeEntry({ ...presetEntry(preset as "fork"), preset }, r);
+  assert.equal(targetPath(app("fork"), "D:\\repo\\src\\a.ts", false, r), "D:\\repo");
+  assert.equal(targetPath(app("github-desktop"), "D:\\repo\\src", true, r), "D:\\repo");
+  assert.equal(targetPath(app("fork"), "D:\\other\\a.ts", false, r), "D:\\other");
+  assert.equal(targetPath(app("terminal"), "D:\\repo\\src\\a.ts", false, r), "D:\\repo\\src");
+  assert.equal(targetPath(app("vscode"), "D:\\repo\\src\\a.ts", false, r), "D:\\repo\\src\\a.ts");
+  assert.equal(targetPath(describeEntry(custom({ command: "x" }), r), "D:\\a.ts", false, r), "D:\\a.ts");
 });

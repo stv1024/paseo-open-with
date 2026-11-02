@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="base.css" />
+    <style>
+      :root {
+        --w: 1280px;
+        --h: 640px;
+      }
+      body {
+        background:
+          radial-gradient(900px 520px at 88% 8%, rgba(99, 102, 241, 0.28), transparent 60%),
+          radial-gradient(700px 480px at 70% 110%, rgba(124, 203, 160, 0.16), transparent 60%),
+          #111413;
+      }
+      .copy {
+        position: absolute;
+        left: 80px;
+        top: 0;
+        bottom: 0;
+        width: 470px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 22px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      .brand img {
+        width: 76px;
+        height: 76px;
+      }
+      .brand .name {
+        font-size: 52px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .brand .for {
+        font-size: 16px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .tagline {
+        font-size: 25px;
+        line-height: 1.4;
+        color: var(--fg);
+      }
+      .tagline em {
+        font-style: normal;
+        color: var(--accent-bright);
+      }
+      .chips {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--muted);
+      }
+
+      .card {
+        position: absolute;
+        background: var(--surface0);
+        border: 1px solid var(--border-accent);
+        border-radius: 14px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+        overflow: hidden;
+      }
+      .card .bar {
+        height: 46px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 14px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .card .bar .spacer {
+        flex: 1;
+      }
+      .card .body {
+        padding: 18px 20px;
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--fg);
+      }
+      .link {
+        color: var(--accent-bright);
+      }
+      .link.target {
+        background: rgba(124, 203, 160, 0.14);
+        border-radius: 4px;
+      }
+      .menu {
+        position: absolute;
+        padding: 4px;
+        border-radius: 8px;
+        border: 1px solid color-mix(in srgb, var(--fg) 16%, transparent);
+        background: var(--surface1);
+        font-size: 13px;
+        line-height: 18px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+        min-width: 160px;
+      }
+      .menu .row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 6px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+      }
+      .menu .row.hover {
+        background: color-mix(in srgb, var(--fg) 10%, transparent);
+      }
+      .menu .row img,
+      .menu .row svg.icon {
+        width: 16px;
+        height: 16px;
+      }
+      .menu .row svg.icon {
+        color: var(--muted);
+      }
+      .menu .arrow {
+        margin-left: auto;
+        padding-left: 16px;
+        opacity: 0.6;
+      }
+      .menu .sep {
+        height: 1px;
+        margin: 4px 6px;
+        background: color-mix(in srgb, var(--fg) 16%, transparent);
+      }
+      .label {
+        position: absolute;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--extra-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="copy">
+      <div class="brand">
+        <img src="../../assets/icon.png" />
+        <div>
+          <div class="name">Open With</div>
+          <div class="for">a Paseo plugin</div>
+        </div>
+      </div>
+      <div class="tagline">Open the workspace, or any file an agent mentions, in <em>the app you choose</em>.</div>
+      <div class="chips">
+        <span class="chip">Fork</span>
+        <span class="chip">VS Code</span>
+        <span class="chip">Cursor</span>
+        <span class="chip">Terminal</span>
+        <span class="chip">+ any app</span>
+      </div>
+    </div>
+
+    <!-- Workspace header button -->
+    <div class="label" style="left: 640px; top: 58px">Workspace header</div>
+    <div class="card" style="left: 640px; top: 84px; width: 560px; height: 190px">
+      <div class="bar">
+        Fix the OAuth redirect loop
+        <span class="spacer"></span>
+        <span class="hbtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 21V9a9 9 0 0 0 9 9" /></svg></span>
+        <span class="hbtn on"><svg class="icon" viewBox="0 0 24 24"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" /><path d="m21 3-9 9" /><path d="M15 3h6v6" /></svg></span>
+      </div>
+    </div>
+    <div class="menu" style="left: 1004px; top: 128px">
+      <div class="row"><img src="icons/fork.png" />Fork</div>
+      <div class="row hover"><img src="icons/vscode.png" />VS Code</div>
+      <div class="row"><img src="icons/terminal.png" />Terminal</div>
+      <div class="row"><img src="icons/explorer.png" />File Manager</div>
+    </div>
+
+    <!-- Right-click on a file link -->
+    <div class="label" style="left: 640px; top: 334px">File links in agent replies</div>
+    <div class="card" style="left: 640px; top: 360px; width: 560px; height: 214px">
+      <div class="body">
+        The chart is done. I changed these files:<br />
+        • <span class="link">src/forecast.ts:42</span><br />
+        • <span class="link target">src/chart/bars.ts</span><br />
+        • <span class="link">docs/chart.md</span>
+      </div>
+    </div>
+    <div class="menu" id="menu" style="left: 760px; top: 452px">
+      <div class="row">Show in Folder</div>
+      <div class="row">Open</div>
+      <div class="row hover" id="open-with">Open With<span class="arrow">›</span></div>
+      <div class="row">Copy Path</div>
+    </div>
+    <div class="menu" id="submenu">
+      <div class="row"><img src="icons/fork.png" />Fork</div>
+      <div class="row hover"><img src="icons/vscode.png" />VS Code</div>
+      <div class="row"><svg class="icon" viewBox="0 0 24 24"><path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" /></svg>Cursor</div>
+    </div>
+    <script>
+      // Lay out the submenu the way the plugin does: right of the menu, 5 px above the row.
+      const sub = document.getElementById("submenu");
+      sub.style.left = `${document.getElementById("menu").getBoundingClientRect().right + 2}px`;
+      sub.style.top = `${document.getElementById("open-with").getBoundingClientRect().top - 5}px`;
+    </script>
+  </body>
+</html>

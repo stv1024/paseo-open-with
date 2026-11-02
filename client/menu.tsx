@@ -26,6 +26,8 @@ function imageIcon(uri: string): ComponentType<PluginButtonIconProps> {
 }
 
 export interface OpenWithMenu {
+  /** The apps from the last read. */
+  apps(): readonly App[];
   /** Reads the app list again and rebuilds every menu. */
   refresh(): Promise<void>;
   dispose(): void;
@@ -122,6 +124,7 @@ export function installMenu(client: PluginClientContext): OpenWithMenu {
   const timer = setInterval(() => void refresh(), REFRESH_MS);
 
   return {
+    apps: () => apps,
     refresh,
     dispose() {
       disposed = true;

@@ -1,15 +1,18 @@
 {
   "id": "open-with",
   "name": "Open With",
-  "description": "Open the workspace folder in Fork, GitHub Desktop, VS Code, Cursor, a terminal, or any app you add, in two clicks from the header.",
+  "description": "Open the workspace, or a file link in an agent reply, in Fork, VS Code, Cursor, a terminal, or any app you add. Right-click a file link or image to show it in its folder or copy its path.",
   "icon": "assets/icon.png",
   "media": [
+    "docs/images/promo.png",
     "docs/images/menu.png",
-    "docs/images/settings.png"
+    "docs/images/file-menu.png",
+    "docs/images/settings.png",
+    "docs/images/file-menu-zh-CN.png"
   ],
   "translations": {
     "zh-CN": {
-      "description": "在顶栏两次点击，用 Fork、GitHub Desktop、VS Code、Cursor、终端或你添加的任何程序打开 workspace 目录。"
+      "description": "用 Fork、VS Code、Cursor、终端或你添加的任何程序，打开 workspace 或 Agent 回复里的文件链接。右击文件链接或图片，可以在文件夹中显示、复制路径。"
     }
   },
   "requirements": {

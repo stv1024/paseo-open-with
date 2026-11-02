@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="base.css" />
+    <style>
+      :root {
+        --w: 1440px;
+        --h: 640px;
+      }
+      .chat.reply {
+        opacity: 1;
+        padding-top: 30px;
+      }
+      .reply .msg {
+        max-width: 760px;
+        color: var(--fg);
+      }
+      .reply .msg.user {
+        max-width: 520px;
+      }
+      .reply ul {
+        margin: 8px 0 8px 22px;
+      }
+      .reply li {
+        margin: 4px 0;
+      }
+      .link {
+        color: var(--accent-bright);
+      }
+      .link.target {
+        background: rgba(124, 203, 160, 0.14);
+        border-radius: 4px;
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+      /* The plugin draws this menu itself, with the colors and font of the reply. */
+      .ctx {
+        position: absolute;
+        min-width: 160px;
+        padding: 4px;
+        border-radius: 8px;
+        border: 1px solid color-mix(in srgb, var(--fg) 16%, transparent);
+        background: var(--surface0);
+        color: var(--fg);
+        font-size: 13px;
+        line-height: 18px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      }
+      .ctx .row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+      }
+      .ctx .row.hover {
+        background: color-mix(in srgb, var(--fg) 10%, transparent);
+      }
+      .ctx .row img,
+      .ctx .row svg.icon {
+        width: 16px;
+        height: 16px;
+      }
+      .ctx .row svg.icon {
+        opacity: 0.7;
+      }
+      .ctx .arrow {
+        margin-left: auto;
+        padding-left: 16px;
+        opacity: 0.6;
+      }
+      .ctx .sep {
+        height: 1px;
+        margin: 4px 6px;
+        background: color-mix(in srgb, var(--fg) 16%, transparent);
+      }
+      .cursor {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window">
+      <aside class="sidebar">
+        <div class="project">weather-app</div>
+        <div class="ws active"><i class="dot live"></i><span data-zh="周预报图表">Weekly forecast chart</span></div>
+        <div class="ws"><i class="dot"></i><span data-zh="城市搜索">City search</span></div>
+        <div class="ws"><i class="dot"></i><span data-zh="离线缓存">Offline cache</span></div>
+        <div class="footer">
+          <div class="ws">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>
+            <span data-zh="设置">Settings</span>
+          </div>
+        </div>
+      </aside>
+      <section class="main">
+        <div class="header">
+          <span class="title" data-zh="周预报图表">Weekly forecast chart</span>
+          <span class="branch">feat/forecast-chart</span>
+          <span class="spacer"></span>
+          <span class="hbtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 21V9a9 9 0 0 0 9 9" /></svg></span>
+          <span class="hbtn"><svg class="icon" viewBox="0 0 24 24"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" /><path d="m21 3-9 9" /><path d="M15 3h6v6" /></svg></span>
+          <span class="hbtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" /></svg></span>
+        </div>
+        <div class="tabs">
+          <div class="tab active" data-zh="Claude · 画出 7 天预报图">Claude · Draw the 7-day forecast</div>
+          <div class="tab" data-zh="终端">Terminal</div>
+        </div>
+        <div class="chat reply">
+          <div class="msg user" data-zh="把一周的预报画成柱状图，再告诉我改了哪些文件。">Draw the week's forecast as a bar chart, and tell me which files you changed.</div>
+          <div class="msg">
+            <span data-zh="图表已完成。我改了这些文件：">The chart is done. I changed these files:</span>
+            <ul>
+              <li><span class="link">src/forecast.ts:42</span> — <span data-zh="按天汇总读数">groups readings by day</span></li>
+              <li><span class="link target" id="target">src/chart/bars.ts</span> — <span data-zh="新的柱状图组件">the new bar chart</span></li>
+              <li><span class="link">docs/chart.md</span> — <span data-zh="说明新的坐标轴">explains the new axis</span></li>
+            </ul>
+            <span data-zh="渲染结果在">The rendered chart is at</span> <span class="link">D:\work\weather-app\out\chart.png</span><span data-zh="。">.</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="ctx" id="menu" style="left: 560px; top: 266px">
+      <div class="row" data-zh="在文件夹中显示">Show in Folder</div>
+      <div class="row" data-zh="打开">Open</div>
+      <div class="row hover" id="open-with"><span data-zh="打开方式">Open With</span><span class="arrow">›</span></div>
+      <div class="row" data-zh="复制路径">Copy Path</div>
+    </div>
+
+    <div class="ctx" id="submenu" style="left: 0; top: 0">
+      <div class="row"><img src="icons/fork.png" />Fork</div>
+      <div class="row hover"><img src="icons/vscode.png" />VS Code</div>
+      <div class="row"><svg class="icon" viewBox="0 0 24 24"><path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" /></svg>Cursor</div>
+      <div class="row"><img src="icons/terminal.png" /><span data-zh="终端">Terminal</span></div>
+      <div class="sep"></div>
+      <div class="row"><svg class="icon" viewBox="0 0 24 24"><path d="M20 7h-9" /><path d="M14 17H5" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg><span data-zh="编辑程序…">Edit apps…</span></div>
+    </div>
+
+    <svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M4 2l15 11-6.5 1.2L16 21l-3 1.4-3.6-7L4 19z" fill="#fff" stroke="#000" stroke-width="1.2" stroke-linejoin="round" /></svg>
+
+    <script>
+      if (new URLSearchParams(location.search).get("lang") === "zh-CN") {
+        document.documentElement.lang = "zh-CN";
+        for (const el of document.querySelectorAll("[data-zh]")) el.textContent = el.dataset.zh;
+      }
+      // Lay out the submenu the way the plugin does: right of the menu, 5 px above the row.
+      const row = document.getElementById("open-with").getBoundingClientRect();
+      const sub = document.getElementById("submenu");
+      sub.style.left = `${document.getElementById("menu").getBoundingClientRect().right + 2}px`;
+      sub.style.top = `${row.top - 5}px`;
+      const vscode = sub.children[1].getBoundingClientRect();
+      const cursor = document.getElementById("cursor");
+      cursor.style.left = `${vscode.left + 54}px`;
+      cursor.style.top = `${vscode.top + 12}px`;
+    </script>
+  </body>
+</html>
