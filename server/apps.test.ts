@@ -118,3 +118,18 @@ test("targetPath gives git clients the repository and terminals the folder", () 
   assert.equal(targetPath(app("vscode"), "D:\\repo\\src\\a.ts", false, r), "D:\\repo\\src\\a.ts");
   assert.equal(targetPath(describeEntry(custom({ command: "x" }), r), "D:\\a.ts", false, r), "D:\\a.ts");
 });
+
+test("the Linux terminal preset passes the folder option that each terminal knows", () => {
+  const linux = (files: string[]): Runtime => {
+    const set = new Set(files);
+    return { platform: "linux", env: { HOME: "/home/me", PATH: "/usr/bin" }, exists: (p) => set.has(p) };
+  };
+  const terminal = (files: string[]) => describeEntry(presetEntry("terminal"), linux(files));
+  assert.equal(terminal(["/usr/bin/konsole"]).args, '--workdir "{path}"');
+  assert.equal(terminal(["/usr/bin/gnome-terminal"]).args, '--working-directory="{path}"');
+  assert.equal(terminal(["/usr/bin/x-terminal-emulator", "/usr/bin/konsole"]).args, "");
+  assert.deepEqual(buildCommand(terminal(["/usr/bin/konsole"]), "/a b", linux(["/usr/bin/konsole"])).args, ["--workdir", "/a b"]);
+  // A changed program gets the options of that program.
+  const own = describeEntry({ ...presetEntry("terminal"), command: "konsole" }, linux(["/usr/bin/konsole", "/usr/bin/gnome-terminal"]));
+  assert.equal(own.args, '--workdir "{path}"');
+});

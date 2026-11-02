@@ -118,12 +118,20 @@ export const PRESETS: Record<PresetId, Preset> = {
   },
 };
 
-/** Arguments that differ by platform for one preset, where `{path}` alone is not enough. */
-function presetArgs(preset: PresetId, runtime: Runtime): string {
+/**
+ * Arguments that differ by platform for one preset, where `{path}` alone is not enough.
+ * `command` is the program that runs, because Linux terminals take different options.
+ */
+function presetArgs(preset: PresetId, command: string | null, runtime: Runtime): string {
   if (preset === "terminal") {
     if (runtime.platform === "win32") return `-d "${PATH_TOKEN}"`;
     if (runtime.platform === "darwin") return `-a Terminal "${PATH_TOKEN}"`;
-    return `--working-directory="${PATH_TOKEN}"`;
+    const program = command ? posix.basename(command) : "";
+    if (program === "konsole") return `--workdir "${PATH_TOKEN}"`;
+    if (program === "gnome-terminal") return `--working-directory="${PATH_TOKEN}"`;
+    // x-terminal-emulator can be any terminal. It starts in the folder because
+    // `launch` sets the working directory.
+    return "";
   }
   return `"${PATH_TOKEN}"`;
 }
@@ -171,13 +179,14 @@ export function expandEnv(value: string, runtime: Runtime): string {
 /** The menu entry after merging stored fields over the preset. */
 export function describeEntry(entry: Entry, runtime: Runtime): App {
   const preset = entry.preset ? PRESETS[entry.preset as PresetId] : undefined;
+  const defaultCommand = preset ? resolveCommand(preset.commands(runtime), runtime) : null;
+  const command = entry.command ? resolveCommand([entry.command], runtime) : defaultCommand;
   const defaults = {
     name: preset?.name ?? "",
     icon: preset?.icon ?? "AppWindow",
-    command: preset ? resolveCommand(preset.commands(runtime), runtime) : null,
-    args: preset ? presetArgs(entry.preset as PresetId, runtime) : `"${PATH_TOKEN}"`,
+    command: defaultCommand,
+    args: preset ? presetArgs(entry.preset as PresetId, command, runtime) : `"${PATH_TOKEN}"`,
   };
-  const command = entry.command ? resolveCommand([entry.command], runtime) : defaults.command;
   return {
     id: entry.id,
     preset: entry.preset,

@@ -43,6 +43,10 @@ Built-in apps:
 
 The menu shows only the apps it finds. Apps on `PATH` are found too.
 
+On Linux, the Terminal app gives gnome-terminal `--working-directory` and Konsole
+`--workdir`. Other terminals, through `x-terminal-emulator`, start in the folder
+because the app runs with the folder as its working directory.
+
 ## Open a file link
 
 Right-click a local file link in an agent reply:

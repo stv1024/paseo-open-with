@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- Fix the Terminal app on Linux with Konsole. Konsole now gets `--workdir`, and
+  gnome-terminal keeps `--working-directory`. `x-terminal-emulator` gets no
+  option and starts in the folder. Before, Konsole exited at once and nothing
+  opened ([#1](https://github.com/stv1024/paseo-open-with/issues/1)).
+
 ## 0.2.0
 
 - Includes the File Links plugin. Right-click a local file link or image in an
