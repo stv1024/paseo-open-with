@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Fix the missing Open With button on workspaces created after the plugin loads
+  (for example a new worktree workspace). The first workspace list call now
+  subscribes, so the update handler receives new and removed workspaces
+  ([#2](https://github.com/stv1024/paseo-open-with/issues/2)).
+
 ## 0.2.1
 
 - Fix the Terminal app on Linux with Konsole. Konsole now gets `--workdir`, and

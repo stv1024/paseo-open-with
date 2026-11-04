@@ -114,7 +114,11 @@ export function installMenu(client: PluginClientContext): OpenWithMenu {
     await refresh();
     let cursor: string | undefined;
     do {
-      const page = await client.paseo.workspaces.list({ page: { limit: 200, cursor } });
+      // `subscribe` on the first page is what makes the handler above receive updates.
+      const page = await client.paseo.workspaces.list({
+        page: { limit: 200, cursor },
+        ...(cursor === undefined ? { subscribe: {} } : {}),
+      });
       page.entries.forEach((workspace) => addButton(workspace.id));
       cursor = page.pageInfo.hasMore ? (page.pageInfo.nextCursor ?? undefined) : undefined;
     } while (cursor && !disposed);
