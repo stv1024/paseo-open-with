@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.2
 
 - Fix the missing Open With button on workspaces created after the plugin loads
   (for example a new worktree workspace). The first workspace list call now
