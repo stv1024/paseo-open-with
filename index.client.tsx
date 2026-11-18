@@ -15,7 +15,7 @@ export default function contribute(client: PluginClientContext) {
   );
   const removeSettings = client.addSettingsScreen({
     id: SETTINGS_ID,
-    title: client.i18n.t(messages, "settings"),
+    title: messages.message("settings"),
     icon: "SquareArrowOutUpRight",
     Component: Settings,
   });

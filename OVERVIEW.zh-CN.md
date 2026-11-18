@@ -1,5 +1,7 @@
 Open With 用其他程序打开 workspace 目录，或 Agent 回复里的文件链接。
 
+Paseo 自带的 **Open in** 按钮只有固定的几个编辑器。Open With 还能用终端、Fork 和 GitHub Desktop 这类 Git 客户端、你添加的任何程序打开，并给文件链接和图片加了右键菜单。
+
 ## 打开 workspace
 
 Open With 在 workspace 顶栏加一个按钮。点按钮，再点一个程序，就用这个程序打开 workspace 目录。

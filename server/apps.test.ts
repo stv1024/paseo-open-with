@@ -91,16 +91,29 @@ test("buildCommand puts the folder into each argument", () => {
   assert.deepEqual(buildCommand(app, "D:\\my project", r), {
     executable: "C:\\Apps\\wt.exe",
     args: ["-d", "D:\\my project", "--title", "D:\\my project x"],
-    shell: false,
+    verbatim: false,
   });
 });
 
-test("buildCommand quotes batch files for cmd.exe", () => {
+test("buildCommand runs batch files through cmd.exe with one quoted command line", () => {
   const bat = "C:\\Users\\me\\AppData\\Local\\GitHubDesktop\\bin\\github.bat";
   const r = windows([bat]);
   const app = describeEntry(presetEntry("github-desktop"), r);
-  assert.deepEqual(buildCommand(app, "D:\\a&b (1)", r), { executable: bat, args: ['"D:\\a&b (1)"'], shell: true });
-  assert.deepEqual(buildCommand(app, "D:\\plain", r).args, ["D:\\plain"]);
+  assert.deepEqual(buildCommand(app, "D:\\a&b (1)", r), {
+    executable: "cmd.exe",
+    args: ["/d", "/s", "/c", `"${bat} "D:\\a&b (1)""`],
+    verbatim: true,
+  });
+  assert.deepEqual(buildCommand(app, "D:\\plain", r).args, ["/d", "/s", "/c", `"${bat} D:\\plain"`]);
+
+  const spaced = "C:\\Program Files\\Tool\\run.cmd";
+  const comSpec = "C:\\Windows\\system32\\cmd.exe";
+  const r2 = windows([spaced], { ComSpec: comSpec });
+  assert.deepEqual(buildCommand(describeEntry(custom({ command: spaced }), r2), "D:\\x", r2), {
+    executable: comSpec,
+    args: ["/d", "/s", "/c", `""${spaced}" D:\\x"`],
+    verbatim: true,
+  });
 });
 
 test("buildCommand rejects an app that is not installed", () => {

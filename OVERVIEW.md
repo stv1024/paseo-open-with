@@ -1,5 +1,7 @@
 Open With opens the workspace folder, or a file link in an agent reply, in another app.
 
+Paseo's own **Open in** button has a fixed list of editors. Open With adds terminals, Git clients such as Fork and GitHub Desktop, any program you add, and a right-click menu on file links and images.
+
 ## Open the workspace
 
 Open With adds a button to the workspace header. Click it, then click an app, and the workspace folder opens in that app.

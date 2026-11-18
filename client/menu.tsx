@@ -6,6 +6,7 @@ import type {
   PluginButtonMenuEntry,
   PluginButtonRegistration,
   PluginClientContext,
+  PluginText,
 } from "@getpaseo/plugin/client";
 import { appsRpc, launchRpc, type App } from "../shared/open-with";
 import { messages } from "./messages";
@@ -34,7 +35,7 @@ export interface OpenWithMenu {
 }
 
 export function installMenu(client: PluginClientContext): OpenWithMenu {
-  const buttons = new Map<string, PluginButtonRegistration>();
+  const buttons = new Map<string, PluginButtonRegistration<PluginText>>();
   let apps: App[] = [];
   let disposed = false;
 
@@ -51,8 +52,9 @@ export function installMenu(client: PluginClientContext): OpenWithMenu {
     throw new Error(result.message ? `${text}: ${result.message}` : text);
   };
 
-  const behavior = (workspaceId: string): PluginButtonBehavior => {
-    const items: PluginButtonMenuEntry[] = apps
+  // Titles are messages, not strings, so Paseo translates them again when the language changes.
+  const behavior = (workspaceId: string): PluginButtonBehavior<PluginText> => {
+    const items: PluginButtonMenuEntry<PluginText>[] = apps
       .filter((app) => app.enabled && app.command)
       .map((app) => ({
         kind: "item",
@@ -62,14 +64,14 @@ export function installMenu(client: PluginClientContext): OpenWithMenu {
         behavior: { kind: "action", onPress: () => open(workspaceId, app) },
       }));
     if (items.length === 0) {
-      items.push({ kind: "item", id: "none", title: client.i18n.t(messages, "noApps"), disabled: true, behavior: { kind: "action", onPress() {} } });
+      items.push({ kind: "item", id: "none", title: messages.message("noApps"), disabled: true, behavior: { kind: "action", onPress() {} } });
     }
     items.push(
       { kind: "separator", id: "settings-separator" },
       {
         kind: "item",
         id: "settings",
-        title: client.i18n.t(messages, "edit"),
+        title: messages.message("edit"),
         icon: "Settings2",
         behavior: { kind: "action", onPress: () => client.openSettings(SETTINGS_ID) },
       },
@@ -84,7 +86,7 @@ export function installMenu(client: PluginClientContext): OpenWithMenu {
       client.addHeaderButton({
         id: "open-with",
         workspaceId,
-        button: { title: client.i18n.t(messages, "button"), icon: "SquareArrowOutUpRight", behavior: behavior(workspaceId) },
+        button: { title: messages.message("button"), icon: "SquareArrowOutUpRight", behavior: behavior(workspaceId) },
       }),
     );
   };

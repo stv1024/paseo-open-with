@@ -215,8 +215,11 @@ export function targetPath(app: App, path: string, isDirectory: boolean, runtime
 export interface Command {
   executable: string;
   args: string[];
-  /** Windows batch files run through cmd.exe, which needs its own quoting. */
-  shell: boolean;
+  /**
+   * Pass `args` to the program as they are. Windows batch files run through
+   * cmd.exe, which takes one command line with its own quoting.
+   */
+  verbatim: boolean;
 }
 
 const CMD_SPECIAL = /[\s"&|^<>()!%]/;
@@ -231,9 +234,12 @@ export function buildCommand(app: App, folder: string, runtime: Runtime): Comman
   const args = splitArgs(app.args).map((arg) => arg.split(PATH_TOKEN).join(folder));
   const script = runtime.platform === "win32" && /\.(cmd|bat)$/i.test(app.command);
   if (script) {
-    return { executable: quoteForCmd(app.command), args: args.map(quoteForCmd), shell: true };
+    // The same command line that `shell: true` builds, without its DEP0190 warning.
+    // /s strips the outer quotes, so the inner quotes reach the script as they are.
+    const line = [app.command, ...args].map(quoteForCmd).join(" ");
+    return { executable: runtime.env.ComSpec ?? "cmd.exe", args: ["/d", "/s", "/c", `"${line}"`], verbatim: true };
   }
-  return { executable: app.command, args, shell: false };
+  return { executable: app.command, args, verbatim: false };
 }
 
 /** Keys the daemon sets for itself. Child apps must not inherit them. */
@@ -248,8 +254,8 @@ export function launch(command: Command, cwd: string, runtime: Runtime = nodeRun
       env,
       detached: true,
       stdio: "ignore",
-      shell: command.shell,
-      windowsHide: command.shell,
+      windowsVerbatimArguments: command.verbatim,
+      windowsHide: command.verbatim,
     });
     child.once("error", reject);
     // explorer.exe exits with code 1 even on success, so only a spawn failure counts.

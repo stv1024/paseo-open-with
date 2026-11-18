@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.3
+
+- Start `.cmd` and `.bat` apps on Windows (for example GitHub Desktop) through
+  `cmd.exe /d /s /c` with one quoted command line, instead of
+  `spawn(..., { shell: true })`. Node.js no longer prints the DEP0190
+  warning in the plugin log. Paths with spaces, `&`, and parentheses still
+  reach the app as one argument.
+- The header button, its menu items, and the settings tab follow a change of
+  the app language at once. Before, they kept the language that was active when
+  the plugin loaded.
+- Update the Paseo SDK used for type checks to 0.16.1. The plugin still runs on
+  Paseo 0.13.2 and later.
+
 ## 0.2.2
 
 - Fix the missing Open With button on workspaces created after the plugin loads
