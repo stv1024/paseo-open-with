@@ -94,6 +94,7 @@ declare const navigator: {
   };
 };
 declare function setTimeout(callback: () => void, ms: number): unknown;
+declare function clearTimeout(handle: unknown): void;
 
 type Resolution =
   | { ok: true; path: string; isDirectory: boolean }
@@ -101,6 +102,8 @@ type Resolution =
 
 const EDGE = 8;
 const ERROR_MS = 2000;
+const RETRY_MIN_MS = 1000;
+const RETRY_MAX_MS = 30_000;
 
 // The Lucide icons that the built-in apps use. Other names get AppWindow.
 const LUCIDE: Record<string, string> = {
@@ -491,22 +494,53 @@ export function installFileLinkMenu(client: PluginClientContext, openWith: OpenW
 
   // The app loads this plugin once per connected host, and every copy sees the same
   // right-click. Only the copy whose host owns the open page may answer.
-  // undefined: not known yet. null: the host did not say, so answer every route.
+  // undefined: not known yet. null: the host has no hosts API, so answer every route.
+  // A remote host often loads this plugin before its relay connects. Its first
+  // hosts.list then fails, so try again until it answers. Before 0.2.4 that copy
+  // answered every route, and its menu covered the menu of the right host.
   let ownServerId: string | null | undefined;
-  void client.paseo.hosts.list().then(
-    (directory) => {
-      ownServerId = directory.self.serverId;
-    },
-    () => {
-      ownServerId = null;
-    },
-  );
+  let disposed = false;
+  let asking = false;
+  let retry: unknown = null;
+  let retryMs = RETRY_MIN_MS;
+  const askOwnServerId = () => {
+    if (disposed || asking || ownServerId !== undefined) return;
+    asking = true;
+    retry = null;
+    Promise.resolve()
+      .then(() => client.paseo.hosts.list())
+      .then(
+        (directory) => {
+          ownServerId = directory.self.serverId;
+        },
+        (error: unknown) => {
+          if (isUnsupported(error)) {
+            ownServerId = null;
+            return;
+          }
+          if (!disposed) {
+            retry = setTimeout(askOwnServerId, retryMs);
+            retryMs = Math.min(retryMs * 2, RETRY_MAX_MS);
+          }
+        },
+      )
+      .finally(() => {
+        asking = false;
+      });
+  };
+  askOwnServerId();
 
   const onContextMenu = (event: DomEvent) => {
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
       return;
     }
     const { serverId } = getRouteContext(location.pathname);
+    if (serverId && ownServerId === undefined && !asking) {
+      // Ask now instead of after the backoff. This right-click goes to the native menu.
+      if (retry !== null) clearTimeout(retry);
+      retryMs = RETRY_MIN_MS;
+      askOwnServerId();
+    }
     if (serverId && ownServerId !== null && serverId !== ownServerId) {
       return;
     }
@@ -521,7 +555,15 @@ export function installFileLinkMenu(client: PluginClientContext, openWith: OpenW
 
   document.addEventListener("contextmenu", onContextMenu, true);
   return () => {
+    disposed = true;
+    if (retry !== null) clearTimeout(retry);
     document.removeEventListener("contextmenu", onContextMenu, true);
     closeMenu?.();
   };
+}
+
+/** True when the host has no hosts API (Paseo before connected hosts). Then no retry helps. */
+function isUnsupported(error: unknown): boolean {
+  if (error instanceof TypeError) return true;
+  return typeof error === "object" && error !== null && (error as { code?: unknown }).code === "unsupported_capability";
 }

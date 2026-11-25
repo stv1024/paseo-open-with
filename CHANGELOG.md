@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.4
+
+- Fix the file link menu that showed "Workspace folder not found" about one
+  second after a right-click, with Show in Folder and Open turned gray. Paseo
+  loads the plugin once for each connected host. A remote host often loads it
+  before its relay connects, so its first `hosts.list` call failed, and that
+  copy then answered right-clicks on every host. Its menu covered the menu of
+  the right host and looked for the file on the wrong computer. Now the copy
+  tries again until the host answers, and until then it lets the other copies
+  answer. Update the plugin on every host, because each host sends its own copy.
+
 ## 0.2.3
 
 - Start `.cmd` and `.bat` apps on Windows (for example GitHub Desktop) through
